@@ -1,6 +1,9 @@
 package net.euphalys.eufac;
 
 import net.euphalys.eufac.commands.RTpCommand;
+import net.euphalys.eufac.commands.ShopCommand;
+import net.euphalys.eufac.listener.ListenerManager;
+import net.euphalys.eufac.utils.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,11 +17,16 @@ public class EuFac extends JavaPlugin {
 
     private static EuFac instance;
     public Map<Player, Long> rtpTimer = new HashMap();
+    public int xpBooster = 0;
+    public BossBar bar;
 
     @Override
     public void onEnable() {
         instance = this;
+        bar = new BossBar(this, "");
+        new ListenerManager();
         this.getCommand("rtp").setExecutor(new RTpCommand());
+        this.getCommand("shop").setExecutor(new ShopCommand());
     }
 
     public static EuFac getInstance() {
