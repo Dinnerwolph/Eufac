@@ -1,7 +1,11 @@
 package net.euphalys.eufac;
 
 import net.euphalys.eufac.commands.RTpCommand;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Dinnerwolph
@@ -9,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class EuFac extends JavaPlugin {
 
     private static EuFac instance;
+    public Map<Player, Long> rtpTimer = new HashMap();
 
     @Override
     public void onEnable() {

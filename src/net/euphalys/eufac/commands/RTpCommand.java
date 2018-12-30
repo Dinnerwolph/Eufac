@@ -21,8 +21,19 @@ public class RTpCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (!(commandSender instanceof Player))
             return false;
-        rtp((Player) commandSender);
-        return true;
+        Player player = (Player)commandSender;
+        if(EuFac.getInstance().rtpTimer.containsKey(player))
+            if(System.currentTimeMillis() - EuFac.getInstance().rtpTimer.get(player) / 1000> 300 && !player.hasPermission("eufac.rtp.bypass")) {
+                player.sendMessage("§cVous ne pouvez executer cette commande toute les 5 minutes");
+                return true;
+            } else {
+                if(rtp(player))
+                    EuFac.getInstance().rtpTimer.put(player, System.currentTimeMillis());
+                else
+                    player.sendMessage("§cLa téléportation à échoué.");
+                return true;
+            }
+        return false;
     }
 
     private boolean rtp(Player player) {
