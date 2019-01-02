@@ -1,19 +1,17 @@
 package net.euphalys.eufac.listener.player;
 
-import net.euphalys.eufac.EuFac;
 import net.euphalys.eufac.tasks.AFKTask;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 /**
  * @author Dinnerwolph
  */
-public class Quit implements Listener {
+public class Move implements Listener {
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        EuFac.getInstance().bar.removePlayer(event.getPlayer());
+    public void onPlayerMove(PlayerMoveEvent event) {
         AFKTask.removePlayer(event.getPlayer());
     }
 }

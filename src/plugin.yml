@@ -1,6 +1,6 @@
 name: EuFac
 main: net.euphalys.eufac.EuFac
-version: 0.2
+version: 0.3
 author: Dinnerwolph
 commands:
   rtp:

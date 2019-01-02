@@ -3,7 +3,9 @@ package net.euphalys.eufac;
 import net.euphalys.eufac.commands.RTpCommand;
 import net.euphalys.eufac.commands.ShopCommand;
 import net.euphalys.eufac.listener.ListenerManager;
+import net.euphalys.eufac.tasks.AFKTask;
 import net.euphalys.eufac.utils.BossBar;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,6 +29,7 @@ public class EuFac extends JavaPlugin {
         new ListenerManager();
         this.getCommand("rtp").setExecutor(new RTpCommand());
         this.getCommand("shop").setExecutor(new ShopCommand());
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new AFKTask(), 0, 20);
     }
 
     public static EuFac getInstance() {
