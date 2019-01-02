@@ -33,7 +33,9 @@ public class RTpCommand implements CommandExecutor {
                     player.sendMessage("§cLa téléportation à échoué.");
                 return true;
             }
-        return false;
+        else if(rtp(player))
+            EuFac.getInstance().rtpTimer.put(player, System.currentTimeMillis());
+        return true;
     }
 
     private boolean rtp(Player player) {
