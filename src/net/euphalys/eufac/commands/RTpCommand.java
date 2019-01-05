@@ -21,28 +21,24 @@ public class RTpCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (!(commandSender instanceof Player))
             return false;
-        Player player = (Player)commandSender;
-        if(EuFac.getInstance().rtpTimer.containsKey(player))
-            if(System.currentTimeMillis() - EuFac.getInstance().rtpTimer.get(player) / 1000> 300 && !player.hasPermission("eufac.rtp.bypass")) {
+        Player player = (Player) commandSender;
+        if (EuFac.getInstance().rtpTimer.containsKey(player))
+            if (System.currentTimeMillis() - EuFac.getInstance().rtpTimer.get(player) / 1000 > 300 && !player.hasPermission("eufac.rtp.bypass")) {
                 player.sendMessage("§cVous ne pouvez executer cette commande toute les 5 minutes");
                 return true;
             } else {
-                if(rtp(player))
+                if (rtp(player))
                     EuFac.getInstance().rtpTimer.put(player, System.currentTimeMillis());
                 else
                     player.sendMessage("§cLa téléportation à échoué.");
                 return true;
             }
-        else if(rtp(player))
+        else if (rtp(player))
             EuFac.getInstance().rtpTimer.put(player, System.currentTimeMillis());
         return true;
     }
 
     private boolean rtp(Player player) {
-        if (!player.getWorld().getName().equals("faction")) {
-            player.sendMessage("§cVous ne pouvez executer cette commande que dans le monde faction.");
-            return false;
-        }
         int z1 = new Random().nextInt(7500);
         int z2 = new Random().nextInt(7500);
         int x1 = new Random().nextInt(7500);
@@ -50,7 +46,7 @@ public class RTpCommand implements CommandExecutor {
         int z = z1 - z2;
         int x = x1 - x2;
         for (int i = 255; i > 0; i--) {
-            Block block = Bukkit.getWorld("faction").getBlockAt(x, i, z);
+            Block block = Bukkit.getWorlds().get(0).getBlockAt(x, i, z);
             if (block.getType() != Material.AIR)
                 if (block.getType().equals(Material.WATER))
                     return rtp(player);

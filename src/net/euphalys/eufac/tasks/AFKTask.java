@@ -22,7 +22,7 @@ public class AFKTask extends BukkitRunnable {
                     player.kickPlayer("AFK non autorisé");
                 } else
                     afkList.put(player, afkList.get(player) + 1);
-            else
+            else if(!player.hasPermission("afk.bypass"))
                 afkList.put(player, 0);
         }
     }

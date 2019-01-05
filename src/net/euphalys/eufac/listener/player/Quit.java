@@ -13,6 +13,7 @@ public class Quit implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        EuFac.getInstance().removePlayer(event.getPlayer());
         EuFac.getInstance().bar.removePlayer(event.getPlayer());
         AFKTask.removePlayer(event.getPlayer());
     }
