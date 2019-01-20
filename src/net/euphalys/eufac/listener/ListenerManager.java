@@ -24,5 +24,6 @@ public class ListenerManager {
         pm.registerEvents(new Join(), instance);
         pm.registerEvents(new Move(), instance);
         pm.registerEvents(new Quit(), instance);
+        pm.registerEvents(new Brewing(), instance);
     }
 }

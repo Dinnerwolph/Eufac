@@ -16,6 +16,7 @@ import java.util.Map;
 public class BossBar extends BukkitRunnable {
 
     private Map<Long, Pair<String, Integer>> timer = new HashMap();
+    private Map<String, Integer> count = new HashMap();
     private final org.bukkit.boss.BossBar bar;
 
     public BossBar(Plugin instance, String title) {
@@ -40,7 +41,30 @@ public class BossBar extends BukkitRunnable {
     }
 
     public void addTime(String name) {
+        try {
+            int i = count.get(name);
+            count.put(name, i + 1);
+        } catch (NullPointerException e) {
+            count.put(name, 1);
+        }
+
+
         timer.put(System.currentTimeMillis(), new Pair(name, 1800));
+    }
+
+    public Map<Long, Pair<String, Integer>> getTimer() {
+        return timer;
+    }
+
+    public Map<String, Integer> getCount() {
+        return count;
+    }
+
+    public boolean hasBoostXp() {
+        if (timer.size() == 0)
+            return false;
+        else
+            return true;
     }
 
     @Override
@@ -49,8 +73,13 @@ public class BossBar extends BukkitRunnable {
         for (long time : timer.keySet()) {
             int i = timer.get(time).getValue();
             if (i == 0) {
-                EuFac.getInstance().xpBooster -=2;
+                EuFac.getInstance().xpBooster -= 2;
+                if (count.get(timer.get(time).getKey()) == 0)
+                    count.remove(timer.get(time).getKey());
+                else
+                    count.put(timer.get(time).getKey(), count.get(timer.get(time).getKey()) - 1);
                 timer.remove(time);
+
             } else {
                 i--;
                 if (maxtimer < i)

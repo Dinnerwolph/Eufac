@@ -9,6 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,6 +60,34 @@ public class PlayerManager {
         return false;
     }
 
+    public void unload(int boostXp, int id) {
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE `user` SET `boostXp`=? WHERE `id`=?");
+            statement.setInt(1, boostXp);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getEuphId(UUID uuid) {
+        int returnint = 0;
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT `id` FROM user WHERE `uuid`=?");
+            statement.setString(1, uuid.toString());
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            returnint = resultSet.getInt("id");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return returnint;
+    }
+
     public Group getGroup(UUID uuid) {
         try {
             Connection connection = dataSource.getConnection();
@@ -86,5 +117,80 @@ public class PlayerManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Group updateGroup(int id) {
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `group` WHERE `id`=?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            Group group = new Group(resultSet.getInt("id"), resultSet.getString("name"),
+                    resultSet.getString("prefix"), resultSet.getString("suffix"),
+                    resultSet.getInt("ladder"));
+            connection.close();
+            return group;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void setGroup(String name, int groupId) {
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE `user` SET `groupId`=? WHERE `playerName`=?");
+            statement.setString(2, name);
+            statement.setInt(1, groupId);
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void useXPBOOST(int id) {
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO `boostxp`(`euphid`, `dateuse`) VALUES (?, NOW())");
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public List<LocalDateTime> getXPBOOSTUse(int id) {
+        List<LocalDateTime> dateList = new ArrayList<>();
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT `dateuse` FROM boostxp WHERE euphid=? ORDER BY `boostxp`.`id` DESC");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())
+                dateList.add(LocalDateTime.parse(resultSet.getString("dateuse").replace(" ", "T")));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dateList;
+    }
+
+    public Integer getXpBoost(int id) {
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT `boostXp` FROM `user` WHERE `id`=?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            int i = resultSet.getInt("boostXp");
+            connection.close();
+            return i;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
